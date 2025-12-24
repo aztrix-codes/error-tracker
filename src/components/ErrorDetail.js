@@ -247,7 +247,7 @@ export default function ErrorDetail({ report, onBack }) {
         .mobile-back-btn { display: none; background: none; border: none; color: var(--foreground); cursor: pointer; padding: 0; }
         .ghost-copy { background: none; border: none; color: var(--accent-primary); cursor: pointer; padding: 0; }
         @media (max-width: 768px) {
-          .detail-wrapper { overflow-y: auto; height: 100%; display: block; }
+          .detail-wrapper { overflow-y: auto; height: 100%; display: block; padding-bottom: 150px; }
           .detail-content-grid { display: block; overflow: visible; height: auto; }
           .detail-sidebar-section, .detail-main-section { width: 100%; border-right: none; overflow: visible; padding: 20px; height: auto; }
           .mobile-back-btn { display: block; }
