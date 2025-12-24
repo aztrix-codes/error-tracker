@@ -20,7 +20,7 @@ export default function MonitorPage() {
     abortControllerRef.current = new AbortController();
 
     setIsLoading(true);
-    const url = `https://apiv4.lineupx.com/RecruiterV2/Job/SET/GetMobilePayloadData?limit=30&page=1&userEmail=${qEmail}`;
+    const url = `https://apiv4.lineupx.com/RecruiterV2/Job/SET/GetMobilePayloadData?limit=30&page=1&agency_id=&email=${qEmail}`;
 
     try {
       const res = await fetch(url, { signal: abortControllerRef.current.signal });
@@ -67,8 +67,6 @@ export default function MonitorPage() {
   return (
     <div className="app-body">
       <Navbar
-        email={email}
-        setEmail={setEmail}
         onRefresh={() => fetchLogs(email)}
       />
 
@@ -80,6 +78,7 @@ export default function MonitorPage() {
             onSelect={handleSelect}
             email={email}
             setEmail={setEmail}
+            isLoading={isLoading}
           />
         </div>
 

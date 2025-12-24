@@ -1,13 +1,16 @@
 'use client';
 import { User, Activity, ChevronRight, Search } from 'lucide-react';
 
-export default function ErrorList({ logs, selectedId, onSelect, email, setEmail }) {
+export default function ErrorList({ logs, selectedId, onSelect, email, setEmail, isLoading }) {
   return (
     <div className="error-list-container">
-      {/* Search Header - Responsive Layout */}
       <div className="list-header">
         <div className="search-pill">
-          <Search size={16} color="var(--muted)" />
+          {isLoading ? (
+            <Activity size={16} className="spin-icon" color="var(--accent-primary)" />
+          ) : (
+            <Search size={16} color="var(--muted)" />
+          )}
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -16,18 +19,15 @@ export default function ErrorList({ logs, selectedId, onSelect, email, setEmail 
           />
         </div>
         
-        {/* Count Badge - Always visible, repositioned for mobile via CSS */}
         <div className="count-badge">
           {logs.length.toString().padStart(2, '0')} 
-          <span className="count-label"> EVENTS</span>
         </div>
       </div>
 
-      {/* Scrollable Feed */}
       <div className="feed-viewport custom-scrollbar">
         {logs.length === 0 ? (
           <div className="empty-state">
-            <p>AWAITING_TELEMETRY...</p>
+            <p>{isLoading ? 'FETCHING_DATA...' : 'AWAITING_TELEMETRY...'}</p>
           </div>
         ) : (
           logs.map((item) => {
@@ -78,8 +78,6 @@ export default function ErrorList({ logs, selectedId, onSelect, email, setEmail 
         
         .count-badge { font-size: 11px; font-family: monospace; font-weight: 700; color: var(--foreground); background: var(--card-secondary); padding: 11px 12px; border-radius: 8px; border: 1px solid var(--border); white-space: nowrap; }
         
-        .desktop-sub-header { padding: 12px 20px; background: var(--card-secondary); border-bottom: 1px solid var(--border); display: block; }
-        
         .feed-viewport { flex: 1; overflow-y: auto; padding-bottom: 150px; }
         .empty-state { padding: 80px 20px; text-align: center; color: var(--muted); font-size: 12px; letter-spacing: 0.1em; }
         
@@ -100,10 +98,11 @@ export default function ErrorList({ logs, selectedId, onSelect, email, setEmail 
         .chevron-icon { color: var(--accent-primary); opacity: 0; transition: opacity 0.2s; }
         .incident-item.selected .chevron-icon { opacity: 1; }
 
+        .spin-icon { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
         @media (max-width: 768px) {
           .list-header { padding: 12px 16px; }
-          .count-label { display: none; }
-          .desktop-sub-header { display: none; }
           .incident-message { font-size: 16px; }
           .user-email { font-size: 14px; }
           .type-tag { font-size: 11px; }

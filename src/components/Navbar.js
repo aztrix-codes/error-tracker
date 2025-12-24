@@ -5,11 +5,9 @@ import {
   RefreshCcw, 
   Sun, 
   Moon, 
-  Search, 
-  Activity
 } from 'lucide-react';
 
-export default function Navbar({ email, setEmail, onRefresh }) {
+export default function Navbar({ onRefresh }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isDark, setIsDark] = useState(true);
@@ -66,17 +64,7 @@ export default function Navbar({ email, setEmail, onRefresh }) {
         </button>
       </div>
 
-      <div className="nav-search-wrapper">
-        <div className="search-icon-box">
-          <Search size={18} color="var(--muted)" />
-        </div>
-        <input 
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Search by user email..." 
-          className="nav-search-input"
-        />
-      </div>
+      {/* --- SEARCH INPUT REMOVED FROM HERE --- */}
 
       <div className="nav-right-actions">
         <div className="sync-info-box">
@@ -128,31 +116,6 @@ export default function Navbar({ email, setEmail, onRefresh }) {
           background-color: var(--card);
           color: var(--foreground);
           box-shadow: var(--shadow-gentle);
-        }
-        .nav-search-wrapper {
-          display: flex;
-          align-items: center;
-          flex: 1;
-          max-width: 500px;
-          margin: 0 32px;
-          height: 42px;
-          border-radius: 10px;
-          border: 1px solid var(--border);
-          background-color: var(--card-secondary);
-        }
-        .search-icon-box {
-          padding-left: 14px;
-          display: flex;
-          align-items: center;
-        }
-        .nav-search-input {
-          flex: 1;
-          background: transparent;
-          border: none;
-          outline: none;
-          color: var(--foreground);
-          font-size: 15px;
-          padding: 0 12px;
         }
         .nav-right-actions {
           display: flex;
@@ -206,9 +169,6 @@ export default function Navbar({ email, setEmail, onRefresh }) {
           .nav-container {
             height: 60px;
             padding: 0 16px;
-          }
-          .nav-search-wrapper {
-            display: none;
           }
           .nav-btn {
             font-size: 12px;
