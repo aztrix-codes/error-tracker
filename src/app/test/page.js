@@ -8,28 +8,34 @@ export default function MonitorPage() {
   const [logs, setLogs] = useState([]);
   const [selectedLog, setSelectedLog] = useState(null);
   const [selectedEntryId, setSelectedEntryId] = useState(null);
+  const [totalItems, setTotalItems] = useState(0);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const observerTarget = useRef(null);
   const abortControllerRef = useRef(null);
 
-  const fetchLogs = useCallback(async (qEmail) => {
+  const fetchLogs = useCallback(async (qEmail, pageNum, isRefresh = false) => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
     abortControllerRef.current = new AbortController();
 
     setIsLoading(true);
-    const url = `https://testgo.lineupx.com/RecruiterV2/Job/SET/GetMobilePayloadData?limit=100&page=1&agency_id=&email=${qEmail}`;
+    const url = `https://testgo.lineupx.com/RecruiterV2/Job/SET/GetMobilePayloadData?limit=15&page=${pageNum}&agency_id=&email=${qEmail}`;
 
     try {
       const res = await fetch(url, { signal: abortControllerRef.current.signal });
       const result = await res.json();
       
       if (result.status === 'success' && Array.isArray(result.data)) {
-        setLogs(result.data);
-      } else {
-        setLogs([]);
+        setLogs(prev => isRefresh ? result.data : [...prev, ...result.data]);
+        setTotalItems(result.pagination?.total_items || 0);
+        
+        const totalPages = result.pagination?.total_pages || 1;
+        setHasMore(pageNum < totalPages);
       }
     } catch (err) {
       if (err.name !== 'AbortError') {
@@ -41,14 +47,35 @@ export default function MonitorPage() {
   }, []);
 
   useEffect(() => {
-    const debounce = setTimeout(() => fetchLogs(email), 400);
-    const interval = setInterval(() => fetchLogs(email), 30000);
+    setPage(1);
+    const debounce = setTimeout(() => fetchLogs(email, 1, true), 400);
+    
+    const interval = setInterval(() => {
+      setPage(1);
+      fetchLogs(email, 1, true);
+    }, 30000);
 
     return () => {
       clearTimeout(debounce);
       clearInterval(interval);
     };
   }, [email, fetchLogs]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          const nextPage = page + 1;
+          setPage(nextPage);
+          fetchLogs(email, nextPage);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) observer.observe(observerTarget.current);
+    return () => observer.disconnect();
+  }, [hasMore, isLoading, page, email, fetchLogs]);
 
   const handleSelect = useCallback((logEntry) => {
     if (!logEntry || !logEntry._id) return;
@@ -67,18 +94,20 @@ export default function MonitorPage() {
   return (
     <div className="app-body">
       <Navbar
-        onRefresh={() => fetchLogs(email)}
+        onRefresh={() => { setPage(1); fetchLogs(email, 1, true); }}
       />
 
       <div className="main-content-layout">
         <div className={`list-panel ${selectedLog ? 'mobile-hidden' : ''}`}>
           <ErrorList
             logs={logs}
+            totalCount={totalItems}
             selectedId={selectedEntryId}
             onSelect={handleSelect}
             email={email}
             setEmail={setEmail}
             isLoading={isLoading}
+            observerTarget={observerTarget}
           />
         </div>
 

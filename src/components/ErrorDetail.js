@@ -265,10 +265,10 @@ function ContextItem({ label, value, icon, color, isCode, subtext }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700, color: 'var(--muted)' }}>{icon} {label}</div>
-      <div className="context-value" style={{ fontSize: '14px', color: color || 'var(--foreground)', fontFamily: isCode ? 'monospace' : 'inherit', wordBreak: 'break-all' }}>{value || 'N/A'}</div>
+      <div className="context-value" style={{ fontSize: '16px', color: color || 'var(--foreground)', fontFamily: isCode ? 'monospace' : 'inherit', wordBreak: 'break-all' }}>{value || 'N/A'}</div>
       {subtext && <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--accent-primary)' }}>{subtext}</div>}
       <style dangerouslySetInnerHTML={{ __html: `
-        @media (max-width: 768px) { .context-value { font-size: 16px !important; } }
+        @media (max-width: 768px) { .context-value { font-size: 18px !important; } }
       `}} />
     </div>
   );
