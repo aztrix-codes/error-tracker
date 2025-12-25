@@ -20,7 +20,7 @@ export default function MonitorPage() {
     abortControllerRef.current = new AbortController();
 
     setIsLoading(true);
-    const url = `https://apiv4.lineupx.com/RecruiterV2/Job/SET/GetMobilePayloadData?limit=30&page=1&agency_id=&email=${qEmail}`;
+    const url = `https://apiv4.lineupx.com/RecruiterV2/Job/SET/GetMobilePayloadData?limit=100&page=1&agency_id=&email=${qEmail}`;
 
     try {
       const res = await fetch(url, { signal: abortControllerRef.current.signal });
