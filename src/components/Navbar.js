@@ -51,20 +51,19 @@ export default function Navbar({ onRefresh }) {
     <nav className="nav-container">
       <div className="nav-switcher">
         <button 
-          onClick={() => router.push('/test')} 
-          className={`nav-btn ${pathname === '/test' ? 'active' : ''}`}
-        >
-          Test
-        </button>
-        <button 
           onClick={() => router.push('/prod')} 
           className={`nav-btn ${pathname === '/prod' ? 'active' : ''}`}
         >
           Prod
         </button>
+        <button 
+          onClick={() => router.push('/test')} 
+          className={`nav-btn ${pathname === '/test' ? 'active' : ''}`}
+        >
+          Test
+        </button>
       </div>
 
-      {/* --- SEARCH INPUT REMOVED FROM HERE --- */}
 
       <div className="nav-right-actions">
         <div className="sync-info-box">

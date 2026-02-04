@@ -28,7 +28,14 @@ export default function MonitorPage() {
 
     try {
       const res = await fetch(url, { signal: abortControllerRef.current.signal });
-      const result = await res.json();
+      const text = await res.text();
+      
+      if (!text) {
+        if (isRefresh) setLogs([]);
+        return;
+      }
+
+      const result = JSON.parse(text);
       
       if (result.status === 'success' && Array.isArray(result.data)) {
         setLogs(prev => isRefresh ? result.data : [...prev, ...result.data]);
@@ -70,7 +77,10 @@ export default function MonitorPage() {
           fetchLogs(email, nextPage);
         }
       },
-      { threshold: 1.0 }
+      { 
+        threshold: 0.1,    
+        rootMargin: '100px' 
+      }
     );
 
     if (observerTarget.current) observer.observe(observerTarget.current);
